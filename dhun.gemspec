@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency('thor', '>=0.12.0')
   s.add_dependency('ruby-mp3info','>=0.6.13')
   s.add_dependency('visionmedia-growl','>=1.0.3')
+  s.add_dependency('tinyscrobbler', '>=0.2')
   s.authors = ["Deepak Jois"]
   # = MANIFEST =
   s.files = %w[

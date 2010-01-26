@@ -2,6 +2,8 @@ require 'singleton'
 require 'dhun_ext'
 require 'growl'
 require 'mp3info'
+require 'tinyscrobbler'
+
 module Dhun
   class Player
     include Singleton
@@ -12,6 +14,11 @@ module Dhun
     def initialize
       @queue,@history = [],[]
       @status = :stopped
+      begin
+        @scrobbler = Tinyscrobbler::Client.new('tinyscrobbler', 'dev123test')
+      rescue Exception => e
+        puts 'Error: unable to connect to last.fm.'
+      end
     end
 
     # enqueue files and call play.
@@ -134,8 +141,12 @@ module Dhun
       Thread.new do
         while  @status == :playing and !@queue.empty?
           @current = @queue.shift
+          parser = Tinyscrobbler::Parser.new(@current)
           notify mp3_tag(@current),:sticky => false
+          @scrobbler.now_playing(parser.metadata)
           DhunExt.play_file @current
+          puts parser.metadata
+          @scrobbler.played(parser.metadata)
           @history.unshift @current
         end
         @status = :stopped
