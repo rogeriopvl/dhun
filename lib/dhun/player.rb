@@ -145,7 +145,6 @@ module Dhun
           notify mp3_tag(@current),:sticky => false
           @scrobbler.now_playing(parser.metadata)
           DhunExt.play_file @current
-          puts parser.metadata
           @scrobbler.played(parser.metadata)
           @history.unshift @current
         end
