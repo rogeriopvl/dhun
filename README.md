@@ -233,6 +233,17 @@ This will exit the dhun server.
 
     $ dhun stop_server
 
+### Last.fm scrobbling support
+
+You can enable track scrobbling support by creating a `.dhunrc` file in your home directory with your last.fm credentials, just like this:
+
+	my_lastfm_username
+	my_lastfm_password
+	
+The first line should be the username of your last.fm account and the second line should be the respective account password. Each line must be separated by a new line character (enter).
+
+This feature is still very experimental and will be heavily improved.
+
 ## Coming Soon
 
 There are some features planned in the short run. Please file an issue with a

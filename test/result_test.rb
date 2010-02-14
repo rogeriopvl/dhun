@@ -22,7 +22,7 @@ context "the Dhun::Result" do
   context "to_json method" do
     asserts("returns as json") do
       Dhun::Result.new('success','test').to_json
-    end.equals("{\"message\":\"test\",\"result\":\"success\"}")
+    end.equals("{\"result\":\"success\",\"message\":\"test\"}")
   end
 
   context "self.from_json_str method" do

@@ -14,10 +14,15 @@ module Dhun
     def initialize
       @queue,@history = [],[]
       @status = :stopped
-      begin
-        @scrobbler = Tinyscrobbler::Client.new('tinyscrobbler', 'dev123test')
-      rescue Exception => e
-        puts 'Error: unable to connect to last.fm.'
+      if File::exists?(File.expand_path('~/.dhunrc'))
+        content = File.read(File.expand_path('~/.dhunrc')).split("\n")
+        lastfm_username = content[0]
+        lastfm_password = content[1]
+        begin
+          @scrobbler = Tinyscrobbler::Client.new(lastfm_username, lastfm_password)
+        rescue Exception => e
+          puts 'Error: unable to connect to last.fm.'
+        end
       end
     end
 
@@ -141,11 +146,11 @@ module Dhun
       Thread.new do
         while  @status == :playing and !@queue.empty?
           @current = @queue.shift
-          parser = Tinyscrobbler::Parser.new(@current)
+          parser = Tinyscrobbler::Parser.new(@current) if File::exists?(@current) and @scrobbler
           notify mp3_tag(@current),:sticky => false
-          @scrobbler.now_playing(parser.metadata)
+          @scrobbler.now_playing(parser.metadata) if parser and @scrobbler
           DhunExt.play_file @current
-          @scrobbler.played(parser.metadata)
+          @scrobbler.played(parser.metadata) if parser and @scrobbler
           @history.unshift @current
         end
         @status = :stopped
